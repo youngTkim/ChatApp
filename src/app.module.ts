@@ -9,7 +9,10 @@ import * as dotenv from 'dotenv';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('MONGODB주소', {}),
+    MongooseModule.forRoot(
+      'mongodb+srv://kooduck168:2TTZ3qVMu5NK48Wa@cluster0.uehzb8e.mongodb.net/',
+      {},
+    ),
     MongooseModule.forFeature([{ name: MyDocument.name, schema: UserSchema }]),
     ConfigModule.forRoot({
       isGlobal: true,

@@ -10,35 +10,57 @@ import {
 import { Server, Socket } from 'socket.io';
 import { ChatsService } from './chats.service';
 
-@WebSocketGateway(8423, {
+interface ChatMessage {
+  token: string;
+  chat: string;
+}
+
+// emit 듣기  on 보내기
+@WebSocketGateway(3131, {
   cors: { origin: '*' },
+  method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 })
-export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private chatsService: ChatsService) {}
   @WebSocketServer()
   server: Server;
-  users: number = 0;
-  constructor(private chatsService: ChatsService) {}
-  //OnGatewayConnection를 오버라이딩
-  async handleConnection() {
-    this.users++; //사용자 증가
-    this.server.emit('users', this.users);
-    console.log(this.users);
+  async handleConnection(client: any) {
+    console.log('ISCONNECTED!');
+    this.server.emit('message', 'connect!');
   }
-
-  //OnGatewayDisconnect를 오버라이딩
-  async handleDisconnect() {
-    this.users--; //사용자 감소
-    this.server.emit('users', this.users);
-    console.log(this.users);
-  }
+  async handleDisconnect(client: any) {}
 
   @SubscribeMessage('chat')
-  async onChat(client: Socket, @MessageBody() message: string) {
-    console.log(client.rooms); //현재 클라이언트의 방
-    console.log(message); //메시지
-    client.broadcast.emit('chat', message); //전체에게 방송함
+  async onChat(
+    client: Socket,
+    @MessageBody() message: { token: string; chat: string },
+  ) {
+    const { token, chat } = message;
+    console.log(token, message);
+    const authentication = await this.chatsService.isAuthenticated(token);
+    console.log(token, authentication);
+    if (authentication) {
+      await this.chatsService.saveChat(token, chat);
+      this.server.emit('chats', { username: authentication, chat: chat });
+    } else {
+      // client.disconnect()
+    }
   }
 }
+// users: number = 0;
+// //OnGatewayConnection를 오버라이딩
+// async handleConnection() {
+//   this.users++; //사용자 증가
+//   this.server.emit('users', this.users);
+//   console.log(this.users);
+// }
+
+// //OnGatewayDisconnect를 오버라이딩
+// async handleDisconnect() {
+//   this.users--; //사용자 감소
+//   this.server.emit('users', this.users);
+//   console.log(this.users);
+// }
 
 // async handleConnection(socket: Socket) {
 //   await this.chatsService.getUserFromSocket(socket);

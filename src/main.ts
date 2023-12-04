@@ -8,6 +8,6 @@ async function bootstrap() {
     credentials: true,
     exposedHeaders: ['Authorization'], // * 사용할 헤더 추가.
   });
-  await app.listen(8423);
+  await app.listen(3000);
 }
 bootstrap();

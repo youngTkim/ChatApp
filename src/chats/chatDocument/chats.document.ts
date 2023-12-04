@@ -10,10 +10,7 @@ const options: SchemaOptions = {
 @Schema(options)
 export class ChatsDocument extends Document {
   @Prop({ type: sch.Types.ObjectId })
-  user: {
-    id: sch.Types.ObjectId;
-    ref: 'User';
-  };
+  token: string;
 
   @Prop({ type: sch.Types.String })
   chat: string;

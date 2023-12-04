@@ -10,13 +10,13 @@ const options: SchemaOptions = {
 @Schema(options)
 export class MyDocument extends Document {
   @Prop({ type: sch.Types.String })
-  name: string;
+  id: string;
 
   @Prop({ type: sch.Types.String })
-  token: string;
+  password: string;
 
   @Prop({ type: sch.Types.Boolean })
-  online: boolean;
+  online: Boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(MyDocument);

@@ -3,13 +3,41 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ChatsDocument } from './chatDocument/chats.document';
 import { ChatsType } from './chatDocument/chats.document';
+import { ChatsGateway } from './chats.gateway';
+import { MyDocument, MyType } from 'src/mongo/mongo.document';
 
 @Injectable()
 export class ChatsService {
   constructor(
-    @InjectModel(ChatsDocument.name) private model: Model<ChatsType>,
+    @InjectModel(ChatsDocument.name) private chatModel: Model<ChatsType>,
+    @InjectModel(MyDocument.name) private userModel: Model<MyType>,
   ) {}
+
+  async isAuthenticated(token: string) {
+    const found = await this.userModel.findOne({ _id: token });
+    return found ? found.id : false;
+  }
+  async saveChat(token: string, chat: string) {
+    const chatData = new this.chatModel({
+      token,
+      chat,
+    });
+    await chatData.save();
+    return chatData;
+  }
 }
+// testChatsCollection() {
+//   const data = new this.model({
+//     chat: 'asdasd',
+//   });
+//   data
+//     .save()
+//     .then((res) => {
+//       console.log(res);
+//     })
+//     .catch((err) => console.log(err));
+// }
+
 // import { Injectable } from '@nestjs/common';
 // // mongodb에 있는 데이터베이스 '컬렉션명'컬렉션에 대한 종속성 주입
 // import { InjectModel } from '@nestjs/mongoose';
