@@ -9,8 +9,8 @@ const options: SchemaOptions = {
 
 @Schema(options)
 export class ChatsDocument extends Document {
-  @Prop({ type: sch.Types.ObjectId })
-  token: string;
+  @Prop({ type: sch.Types.String })
+  username: string;
 
   @Prop({ type: sch.Types.String })
   chat: string;

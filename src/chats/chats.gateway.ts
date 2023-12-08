@@ -9,11 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatsService } from './chats.service';
-
-interface ChatMessage {
-  token: string;
-  chat: string;
-}
+import { AppService } from 'src/app.service';
 
 // emit 듣기  on 보내기
 @WebSocketGateway(3131, {
@@ -21,30 +17,34 @@ interface ChatMessage {
   method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 })
 export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private chatsService: ChatsService) {}
+  constructor(
+    private chatsService: ChatsService,
+    private appService: AppService,
+  ) {}
   @WebSocketServer()
   server: Server;
-  async handleConnection(client: any) {
+  async handleConnection(client: Socket) {
+    const token = client.handshake.headers.authorization;
+    const isVerified = this.appService.verifyToken(token);
+    if (!isVerified) {
+      client.disconnect();
+      return;
+    }
+    const RecentChats = await this.chatsService.getRecentChats();
     console.log('ISCONNECTED!');
     this.server.emit('message', 'connect!');
+    client.emit('recentchats', RecentChats.reverse());
   }
-  async handleDisconnect(client: any) {}
+  async handleDisconnect(client: Socket) {}
 
   @SubscribeMessage('chat')
   async onChat(
     client: Socket,
-    @MessageBody() message: { token: string; chat: string },
+    @MessageBody() message: { username: string; chat: string },
   ) {
-    const { token, chat } = message;
-    console.log(token, message);
-    const authentication = await this.chatsService.isAuthenticated(token);
-    console.log(token, authentication);
-    if (authentication) {
-      await this.chatsService.saveChat(token, chat);
-      this.server.emit('chats', { username: authentication, chat: chat });
-    } else {
-      // client.disconnect()
-    }
+    const { username, chat } = message;
+    await this.chatsService.saveChat(username, chat);
+    this.server.emit('chats', { username, chat });
   }
 }
 // users: number = 0;

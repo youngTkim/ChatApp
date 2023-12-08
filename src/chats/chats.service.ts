@@ -17,13 +17,26 @@ export class ChatsService {
     const found = await this.userModel.findOne({ _id: token });
     return found ? found.id : false;
   }
-  async saveChat(token: string, chat: string) {
+
+  async saveChat(username: string, chat: string) {
     const chatData = new this.chatModel({
-      token,
+      username,
       chat,
     });
     await chatData.save();
     return chatData;
+  }
+  async getRecentChats() {
+    return (
+      await this.chatModel.find().sort({ createdAt: -1 }).limit(30).exec()
+    ).map((data) => {
+      const { username, chat, createdAt }: any = data;
+      return {
+        date: new Date('' + createdAt).toLocaleString(),
+        username,
+        chat,
+      };
+    });
   }
 }
 // testChatsCollection() {

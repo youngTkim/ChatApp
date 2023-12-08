@@ -6,6 +6,7 @@ import { ChatsDocument, ChatsSchema } from './chatDocument/chats.document';
 import { ChatsGateway } from './chats.gateway';
 import { MyDocument } from 'src/mongo/mongo.document';
 import { UserSchema } from 'src/mongo/mongo.document';
+import { AppService } from 'src/app.service';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { UserSchema } from 'src/mongo/mongo.document';
     MongooseModule.forFeature([{ name: MyDocument.name, schema: UserSchema }]),
   ],
   controllers: [ChatsController],
-  providers: [ChatsService, ChatsGateway],
+  providers: [ChatsService, AppService, ChatsGateway],
 })
 export class ChatsModule {}

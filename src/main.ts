@@ -6,7 +6,7 @@ async function bootstrap() {
   app.enableCors({
     origin: true,
     credentials: true,
-    exposedHeaders: ['Authorization'], // * 사용할 헤더 추가.
+    exposedHeaders: ['Authorization', 'set-cookie'], // * 사용할 헤더 추가.
   });
   await app.listen(3000);
 }
