@@ -18,6 +18,7 @@ export class AppController {
       res.clearCookie('jwt', {
         domain: 'localhost',
         path: '/',
+        sameSite: 'none',
         secure: false,
         httpOnly: false,
       });
@@ -27,7 +28,11 @@ export class AppController {
   }
   @Post()
   async signup(@Body() { id, password }: { id: string; password: string }) {
-    return await this.appService.signup(id, password);
+    try {
+      await this.appService.signup(id, password);
+    } catch (e) {
+      throw new Error(e);
+    }
   }
   @Post('/login')
   async login(
@@ -47,12 +52,13 @@ export class AppController {
     });
     //여기
     return res.send({
-      id,
+      username: id,
       sign,
     });
   }
   @Post('/logout')
   async logout(@Req() req: Request, @Res() res: Response) {
+    console.log(req);
     res.clearCookie('jwt', {
       domain: 'localhost',
       path: '/',

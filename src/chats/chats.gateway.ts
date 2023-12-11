@@ -14,7 +14,7 @@ import { AppService } from 'src/app.service';
 // emit 듣기  on 보내기
 @WebSocketGateway(3131, {
   cors: { origin: '*' },
-  method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 })
 export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(

@@ -34,7 +34,7 @@ export class AppService {
     }
     const isExisted = await this.model.findOne({ id: id });
     if (isExisted) {
-      throw new NotFoundException('중복된 id를 가진 사용자가 있습니다.');
+      throw new BadRequestException('중복된 id를 가진 사용자가 있습니다.');
     }
     const newUser = new this.model({
       id,
@@ -42,7 +42,6 @@ export class AppService {
       online: false,
     });
     await newUser.save();
-    return newUser;
   }
 
   generateToken(id: string, _id: string) {
