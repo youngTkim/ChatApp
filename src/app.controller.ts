@@ -16,7 +16,7 @@ export class AppController {
     const isVerified = this.appService.verifyToken(token);
     if (!isVerified) {
       res.clearCookie('jwt', {
-        domain: 'localhost',
+        domain: '.43.203.11.102',
         path: '/',
         sameSite: 'none',
         secure: false,
@@ -44,7 +44,7 @@ export class AppController {
     const { token, sign }: loginAnswer = Authorized;
     console.log(token);
     res.cookie('jwt', token, {
-      domain: 'localhost',
+      domain: '.43.203.11.102',
       path: '/',
       secure: false,
       httpOnly: false,
@@ -60,7 +60,7 @@ export class AppController {
   async logout(@Req() req: Request, @Res() res: Response) {
     console.log(req);
     res.clearCookie('jwt', {
-      domain: 'localhost',
+      domain: '.43.203.11.102',
       path: '/',
       secure: false,
       httpOnly: false,
