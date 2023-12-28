@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ChatsDocument } from './chatDocument/chats.document';
 import { ChatsType } from './chatDocument/chats.document';
-import { ChatsGateway } from './chats.gateway';
 import { MyDocument, MyType } from 'src/mongo/mongo.document';
 
 @Injectable()
