@@ -1,7 +1,7 @@
 import {
   BadRequestException,
   Injectable,
-  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -19,7 +19,7 @@ export class AppService {
     }
     const LoginUser = await this.model.findOne({ id, password });
     if (LoginUser === null) {
-      throw new NotFoundException(
+      throw new UnauthorizedException(
         '해당하는 아이디에 맞는 비밀번호를 입력하세요.',
       );
     }
