@@ -26,7 +26,6 @@ let AppController = class AppController {
             res.clearCookie('jwt', {
                 domain: 'localhost',
                 path: '/',
-                sameSite: 'none',
                 secure: false,
                 httpOnly: false,
             });

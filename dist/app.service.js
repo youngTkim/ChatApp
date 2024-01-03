@@ -29,7 +29,7 @@ let AppService = class AppService {
         }
         const LoginUser = await this.model.findOne({ id, password });
         if (LoginUser === null) {
-            throw new common_1.NotFoundException('해당하는 아이디에 맞는 비밀번호를 입력하세요.');
+            throw new common_1.UnauthorizedException('해당하는 아이디에 맞는 비밀번호를 입력하세요.');
         }
         const _id = await LoginUser._id.toString();
         const token = this.generateToken(id, _id);

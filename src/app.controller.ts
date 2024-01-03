@@ -16,9 +16,8 @@ export class AppController {
     const isVerified = this.appService.verifyToken(token);
     if (!isVerified) {
       res.clearCookie('jwt', {
-        domain: 'socketclient.s3-website.ap-northeast-2.amazonaws.com',
+        domain: 'ec2-43-201-36-193.ap-northeast-2.compute.amazonaws.com',
         path: '/',
-        sameSite: 'none',
         secure: false,
         httpOnly: false,
       });
@@ -44,7 +43,7 @@ export class AppController {
     const { token, sign }: loginAnswer = Authorized;
     console.log(token);
     res.cookie('jwt', token, {
-      domain: 'socketclient.s3-website.ap-northeast-2.amazonaws.com',
+      domain: 'ec2-43-201-36-193.ap-northeast-2.compute.amazonaws.com',
       path: '/',
       secure: false,
       httpOnly: false,
@@ -56,11 +55,12 @@ export class AppController {
       sign,
     });
   }
+  //socketclient.s3-website.ap-northeast-2.amazonaws.com
   @Post('/logout')
   async logout(@Req() req: Request, @Res() res: Response) {
     console.log(req);
     res.clearCookie('jwt', {
-      domain: 'socketclient.s3-website.ap-northeast-2.amazonaws.com',
+      domain: 'ec2-43-201-36-193.ap-northeast-2.compute.amazonaws.com',
       path: '/',
       secure: false,
       httpOnly: false,
